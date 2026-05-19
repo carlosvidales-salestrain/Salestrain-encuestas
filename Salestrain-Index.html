@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salestrain Index® — Diagnóstico de Madurez Comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&family=Nunito+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --white:#ffffff;--bg:#f4f5f0;--bg2:#eceee8;--dark:#1a1a2e;--dark2:#2c2c3e;
+  --gray:#6b6b7b;--gray-light:#a8a8b8;--gray-lighter:#dcdce8;
+  --teal:#4FBFBF;--teal-dark:#38a0a0;--teal-light:#7fd4d4;--teal-pale:#e8f7f7;
+  --orange:#F5A623;--orange-dark:#d4880a;--orange-light:#f8c066;--orange-pale:#fef5e4;
+  --coral:#E8834A;--coral-dark:#c8612a;--coral-pale:#fdf0e8;
+  --green:#5a9e6a;--green-pale:#f0faf2;--red:#d94a45;--red-pale:#fef5f5;
+  --border:#e0e2d8;--shadow:0 2px 16px rgba(26,26,46,0.07);--shadow-md:0 6px 32px rgba(26,26,46,0.12);
+  --radius:14px;--radius-sm:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--dark);font-family:'Nunito Sans',sans-serif;font-size:15px;min-height:-webkit-fill-available;min-height:100vh}
+h1,h2,h3,h4{font-family:'Nunito',sans-serif}
+
+.screen{display:none;min-height:-webkit-fill-available;min-height:100vh}
+.screen.active{display:flex;flex-direction:column}
+
+/* BRAND */
+.brand{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;background:var(--white);border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+.brand-logo img{height:34px}
+.brand-dot{display:none}
+.brand-sub{font-family:'Nunito',sans-serif;font-size:10px;color:var(--gray-light);letter-spacing:2.5px;text-transform:uppercase;font-weight:700;margin-left:14px;padding-left:14px;border-left:1px solid var(--border)}
+.brand-links{display:flex;align-items:center;gap:20px}
+.brand-link{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray);text-decoration:none;font-family:'Nunito',sans-serif;font-weight:700;transition:color .2s}
+.brand-link:hover{color:var(--teal)}
+.brand-link svg{width:15px;height:15px;fill:currentColor}
+
+/* INTRO */
+#intro{justify-content:flex-start;align-items:center;position:relative;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.intro-bg{position:absolute;inset:0;background:var(--bg)}
+.deco-circle{position:absolute;border-radius:50%;pointer-events:none}
+.intro-content{position:relative;z-index:1;text-align:center;max-width:700px;padding:60px 32px;width:100%}
+.intro-tag{display:inline-block;background:var(--teal-pale);border:1px solid var(--teal-light);color:var(--teal-dark);font-family:'Nunito',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:800;padding:5px 16px;border-radius:50px;margin-bottom:24px}
+.intro-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(44px,7vw,70px);line-height:1.0;text-transform:uppercase;color:var(--dark);margin-bottom:14px}
+.intro-title em{color:var(--teal);font-style:normal;display:block}
+.intro-subtitle{font-size:16px;color:var(--gray);line-height:1.7;margin-bottom:40px;font-weight:400;max-width:540px;margin-left:auto;margin-right:auto}
+.intro-meta{display:flex;gap:0;margin-bottom:36px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.intro-meta-item{flex:1;text-align:center;padding:20px 10px;border-right:1px solid var(--border)}
+.intro-meta-item:last-child{border-right:none}
+.intro-meta-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:30px;color:var(--teal)}
+.intro-meta-label{font-family:'Nunito',sans-serif;font-size:11px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;font-weight:700}
+
+/* FORM */
+.form-box{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:28px;text-align:left;display:grid;grid-template-columns:1fr 1fr;gap:14px;box-shadow:var(--shadow)}
+.form-box h3{font-family:'Nunito',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);font-weight:800;grid-column:1/-1;margin-bottom:6px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.form-box h3::before{content:'';display:block;width:4px;height:14px;background:var(--teal);border-radius:2px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-family:'Nunito',sans-serif;font-size:10px;color:var(--gray);letter-spacing:1.5px;text-transform:uppercase;font-weight:800}
+.form-group input,.form-group select{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--dark);padding:10px 13px;font-size:14px;font-family:'Nunito Sans',sans-serif;outline:none;transition:all .2s}
+.form-group input:focus,.form-group select:focus{border-color:var(--teal);background:var(--white);box-shadow:0 0 0 3px rgba(79,191,191,.1)}
+.form-group select option{background:var(--white);color:var(--dark)}
+#form-error{display:none;background:#fef2f1;border:1.5px solid #fca5a1;border-radius:var(--radius-sm);padding:11px 15px;color:var(--red);font-size:13px;margin-bottom:14px;font-weight:600;grid-column:1/-1}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--teal);color:var(--white);font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;letter-spacing:.5px;padding:13px 36px;border:none;border-radius:50px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(79,191,191,.25)}
+.btn:hover{background:var(--teal-dark);transform:translateY(-2px);box-shadow:0 4px 16px rgba(79,191,191,.35)}
+.btn-outline{background:transparent;border:2px solid var(--teal);color:var(--teal);box-shadow:none}
+.btn-outline:hover{background:var(--teal);color:var(--white)}
+
+/* SURVEY */
+#survey{flex-direction:column}
+.survey-header{background:var(--white);padding:14px 36px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.progress-wrap{display:flex;align-items:center;gap:12px}
+.progress-bar-outer{width:220px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-bar-inner{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+.progress-label{font-family:'Nunito',sans-serif;font-size:12px;color:var(--gray);font-weight:700}
+.survey-body{flex:1;max-width:860px;width:100%;margin:0 auto;padding:40px 32px}
+
+.dimension-block{margin-bottom:52px}
+.dim-header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.dim-badge{font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:50px;background:var(--teal-pale);color:var(--teal-dark);border:1px solid var(--teal-light)}
+.dim-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;text-transform:uppercase;color:var(--dark)}
+.dim-desc{font-size:13px;color:var(--gray);margin-top:2px}
+.question-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:14px;transition:all .2s;box-shadow:var(--shadow)}
+.question-card.answered{border-color:var(--teal);box-shadow:0 2px 16px rgba(79,191,191,.15)}
+.q-text{font-size:14px;line-height:1.65;color:var(--dark);margin-bottom:16px;font-weight:600;font-family:'Nunito',sans-serif}
+.q-num{font-family:'Nunito',sans-serif;font-size:10px;color:var(--gray-light);font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.likert{display:flex;gap:6px}
+.likert label{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.likert input[type=radio]{display:none}
+.likert-btn{width:100%;padding:9px 4px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-size:11px;color:var(--gray);text-align:center;line-height:1.3;transition:all .15s;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600}
+.likert input:checked + .likert-btn{background:var(--teal);color:var(--white);font-weight:800;border-color:var(--teal)}
+.likert label:hover .likert-btn{border-color:var(--teal-light);color:var(--dark)}
+.survey-nav{padding:20px 36px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--white);box-shadow:0 -2px 10px rgba(26,26,46,.05)}
+.nav-info{font-family:'Nunito',sans-serif;font-size:13px;color:var(--gray);font-weight:700}
+
+/* REPORT */
+#report{flex-direction:column;background:var(--bg)}
+.report-header{background:var(--white);padding:20px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+.report-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;color:var(--dark)}
+.report-title span{color:var(--teal)}
+.report-body{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:44px 32px}
+
+.score-hero{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:40px}
+.score-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:26px 22px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.score-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.score-card.estrategia::before{background:var(--coral)}
+.score-card.tactica::before{background:var(--teal)}
+.score-card.operativa::before{background:var(--orange)}
+.score-universe{font-family:'Nunito',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);font-weight:800;margin-bottom:10px}
+.score-pct{font-family:'Nunito',sans-serif;font-weight:900;font-size:54px;line-height:1;margin-bottom:4px}
+.score-pct.good{color:var(--green)}.score-pct.mid{color:var(--orange)}.score-pct.bad{color:var(--red)}
+.score-label{font-size:13px;color:var(--gray);font-weight:500}
+.score-ring{position:absolute;right:16px;top:50%;transform:translateY(-50%)}
+
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:40px}
+.section-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:2px;color:var(--dark);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-title span{color:var(--teal)}
+.section-title::after{content:'';flex:1;height:1.5px;background:var(--border)}
+
+.venn-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.venn-svg{width:100%}
+.radar-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+
+.detail-full{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:26px;margin-bottom:22px;grid-column:1/-1;box-shadow:var(--shadow)}
+.dim-result{margin-bottom:22px}
+.dim-result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.dim-result-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;color:var(--dark)}
+.dim-result-score{font-family:'Nunito',sans-serif;font-weight:900;font-size:20px}
+.bar-outer{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.bar-inner{height:100%;border-radius:4px;transition:width 1s ease}
+
+.plan-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:26px;grid-column:1/-1;box-shadow:var(--shadow)}
+.plan-item{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)}
+.plan-item:last-child{border-bottom:none}
+.plan-priority{background:rgba(217,74,69,.1);color:var(--red);border:1px solid rgba(217,74,69,.25);border-radius:50px;padding:4px 12px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;margin-top:2px}
+.plan-priority.med{background:var(--orange-pale);color:var(--orange-dark);border-color:rgba(212,136,10,.25)}
+.plan-priority.ok{background:var(--green-pale);color:var(--green);border-color:rgba(90,158,106,.25)}
+.plan-text{flex:1}
+.plan-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;margin-bottom:4px;color:var(--dark)}
+.plan-desc{font-size:13px;color:var(--gray);line-height:1.6}
+
+.print-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1.5px solid var(--border);color:var(--gray);border-radius:50px;padding:9px 18px;cursor:pointer;font-size:13px;font-family:'Nunito',sans-serif;font-weight:700;transition:all .2s}
+.print-btn:hover{border-color:var(--teal);color:var(--teal)}
+.client-info-banner{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 22px;display:flex;gap:28px;flex-wrap:wrap;margin-bottom:32px;box-shadow:var(--shadow)}
+.client-info-item label{font-family:'Nunito',sans-serif;color:var(--teal-dark);font-size:9px;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;display:block;margin-bottom:2px}
+.client-info-item strong{color:var(--dark);font-family:'Nunito',sans-serif;font-weight:700}
+
+@media print{
+  .btn,.print-btn,.survey-nav,.brand{display:none}
+  body{background:white;color:black}
+  .score-card,.venn-wrap,.radar-wrap,.detail-full,.plan-wrap{background:white;border:1px solid #ddd;box-shadow:none}
+}
+
+
+* { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+html, body { height:100%; overflow-x:hidden; }
+input, select, textarea { font-size: 16px !important; }
+
+@media (max-width: 768px) {
+
+  /* ── BRAND ── */
+  .brand { padding:12px 16px; }
+  .brand-tag { display:none; }
+  .brand-div { display:none; }
+  .brand-links { gap:12px; }
+  .brand-link span { display:none; }
+  .brand img { height:28px; }
+
+  /* ── INTRO ── */
+  .intro-title, .intro-title em { font-size:34px !important; }
+  .intro-sub { font-size:14px; margin-bottom:20px; }
+  .meta-row { margin-bottom:18px; }
+  .meta-num, .meta-lbl { font-size:24px; }
+  .intro-content { padding:24px 16px 48px !important; }
+  .form-box { padding:18px 16px; grid-template-columns:1fr !important; }
+  .form-group, .fg { grid-column:1 !important; }
+  .form-group.full, .fg.full { grid-column:1 !important; }
+
+  /* ── SURVEY ── */
+  .s-header, .survey-header { padding:12px 16px; }
+  .prog-outer, .progress-bar-outer { width:150px; }
+  .s-body, .survey-body { padding:20px 16px; }
+  .sec-title, .dim-title, .bloque-title { font-size:15px; }
+  .q-txt, .q-text { font-size:13px; }
+  .likert { flex-direction:column; gap:6px; }
+  .likert label { flex-direction:row; align-items:center; gap:10px; }
+  .l-btn, .likert-btn { width:100%; text-align:left; padding:10px 14px; font-size:12px; }
+  .s-nav, .survey-nav { padding:14px 16px; flex-direction:column; gap:10px; align-items:stretch; }
+  .s-nav .btn, .survey-nav .btn { width:100%; justify-content:center; }
+
+  /* ── REPORT ── */
+  .r-header, .report-header { padding:14px 16px; flex-direction:column; align-items:flex-start; gap:10px; }
+  .r-header > div:last-child, .report-header > div:last-child { display:flex; gap:8px; width:100%; }
+  .r-body, .report-body { padding:20px 16px; }
+
+  /* ── CLIENT BANNERS ── */
+  .client-banner, .client-info-banner { padding:12px 16px; gap:10px; }
+  .cb-item, .client-info-item { min-width:44%; }
+
+  /* ── GRIDS → single column ── */
+  .info-grid, .score-hero, .pillars-grid, .index-hero, .consolidated { grid-template-columns:1fr !important; gap:12px; }
+  .acciones-grid { grid-template-columns:1fr !important; gap:12px; }
+  .detail-full, .plan-wrap { grid-column:1 !important; }
+
+  /* ── HERO ── */
+  .tipo-hero { padding:24px 18px; }
+  .tipo-nombre { font-size:32px !important; }
+  .tipo-puntaje-num { font-size:52px !important; }
+  .idx-score { font-size:36px !important; }
+  .frase-key { font-size:14px; }
+
+  /* ── GAUGE ── */
+  .gauge-label { width:80px; font-size:11px; }
+  .gauge-val { font-size:11px; min-width:28px; }
+
+  /* ── Q RESULT LIST ── */
+  .qr-item { flex-wrap:wrap; }
+  .qr-text { font-size:12px; }
+
+  /* ── CONSULT CARD ── */
+  .consult-card { flex-direction:column; padding:20px 18px; gap:14px; }
+  .consult-nombre { font-size:22px !important; }
+  .consult-pill { width:100%; text-align:center; }
+
+  /* ── PLAN ITEMS ── */
+  .plan-item { flex-direction:column; gap:8px; }
+  .plan-card .plan-header { flex-wrap:wrap; }
+
+  /* ── FOOTER ── */
+  .report-footer { padding:24px 16px 36px; }
+  .footer-links { flex-direction:column; gap:12px; }
+  .pillar-card { padding:16px 14px; }
+}
+  .intro-sub { font-size: 14px; margin-bottom: 24px; }
+  .meta-row { margin-bottom: 20px; }
+  .intro-content { position:relative; z-index:2; width:100%; max-width:680px; margin:0 auto; padding:40px 24px 60px; text-align:center; }
+  .form-box { padding: 20px; }
+  .form-grid { grid-template-columns: 1fr !important; }
+  .form-box h3, .form-box-title { font-size: 10px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     INTRO SCREEN
+══════════════════════════════ -->
+<div id="intro" class="screen active">
+  <header class="brand">
+    <div class="brand-left" style="display:flex;align-items:center;gap:16px">
+      <img src="data:image/png;base64,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" alt="Salestrain" style="height:34px">
+      <div class="brand-div" style="width:1px;height:24px;background:var(--border)"></div>
+      <div class="brand-tag" style="font-family:Nunito,sans-serif;font-size:10px;color:var(--gray-light);letter-spacing:2.5px;text-transform:uppercase;font-weight:700">Diagnóstico Salestrain Index®</div>
+    </div>
+    <div class="brand-links">
+      <a class="brand-link" href="https://www.salestrain.com.mx" target="_blank">
+        <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93V18c0-.55-.45-1-1-1H8v-2c0-.55-.45-1-1-1H4.07C3.4 13.42 3 12.75 3 12c0-1.1.45-2.1 1.17-2.83L7 12v1c0 .55.45 1 1 1h1v2c0 .55.45 1 1 1h1v1.93zM18.92 17c-.32-.95-1.2-1.65-2.25-1.65h-1v-3c0-.55-.45-1-1-1H9v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C18.92 5.77 21 8.65 21 12c0 1.93-.63 3.72-1.72 5.17z"/></svg>
+        salestrain.com.mx
+      </a>
+      <a class="brand-link" href="https://www.instagram.com/salestrain_mexico" target="_blank">
+        <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        @salestrain_mexico
+      </a>
+    </div>
+  </header>
+
+  <div style="position:absolute;width:320px;height:320px;background:var(--teal);opacity:.1;border-radius:50%;top:-100px;left:-120px;pointer-events:none"></div>
+  <div style="position:absolute;width:200px;height:200px;background:var(--orange);opacity:.12;border-radius:50%;top:50px;right:-60px;pointer-events:none"></div>
+  <div style="position:absolute;width:120px;height:120px;background:var(--coral);opacity:.1;border-radius:50%;bottom:150px;left:60px;pointer-events:none"></div>
+  <div style="position:absolute;width:80px;height:80px;background:var(--teal);opacity:.08;border-radius:50%;bottom:220px;right:120px;pointer-events:none"></div>
+  <div class="intro-content">
+    <div class="intro-tag">Diagnóstico de Madurez Comercial</div>
+    <h1 class="intro-title">Algoritmo<em>de Éxito.</em></h1>
+    <p class="intro-subtitle">
+      Evalúa el nivel de madurez de tu operación comercial en 3 universos clave: Estrategia, Táctica y Ejecución. Recibe un diagnóstico visual completo con plan de acción priorizado.
+    </p>
+
+    <div class="intro-meta">
+      <div class="intro-meta-item">
+        <div class="intro-meta-num">32</div>
+        <div class="intro-meta-label">Afirmaciones</div>
+      </div>
+      <div class="intro-meta-item">
+        <div class="intro-meta-num">3</div>
+        <div class="intro-meta-label">Universos</div>
+      </div>
+      <div class="intro-meta-item">
+        <div class="intro-meta-num">~8</div>
+        <div class="intro-meta-label">Minutos</div>
+      </div>
+    </div>
+
+    <div class="form-box">
+      <h3>📋 Datos del participante</h3>
+      <div class="form-group full">
+        <label>Código de empresa</label>
+        <input type="text" id="inp-codigo" placeholder="Proporcionado por Salestrain" style="text-transform:uppercase">
+      </div>
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" id="inp-nombre" placeholder="Ej. Juan García">
+      </div>
+      <div class="form-group">
+        <label>Empresa</label>
+        <input type="text" id="inp-empresa" placeholder="Ej. Mi Empresa S.A.">
+      </div>
+      <div class="form-group">
+        <label>Posición</label>
+        <select id="inp-posicion">
+          <option value="">Selecciona...</option>
+          <option>Director General</option>
+          <option>Director Comercial</option>
+          <option>Gerente de Ventas</option>
+          <option>Líder de Equipo</option>
+          <option>Vendedor Senior</option>
+          <option>Vendedor</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Industria</label>
+        <input type="text" id="inp-industria" placeholder="Ej. Financiero, Manufactura...">
+      </div>
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="inp-email" placeholder="Ej. juan@empresa.com">
+      </div>
+      <div class="form-group">
+        <label>Teléfono móvil</label>
+        <input type="tel" id="inp-telefono" placeholder="Ej. +52 55 1234 5678">
+      </div>
+    </div>
+
+    <div id="form-error" style="display:none;background:rgba(217,79,74,0.15);border:1px solid rgba(217,79,74,0.4);border-radius:8px;padding:10px 16px;color:#e06560;font-size:13px;margin-bottom:16px;text-align:left"></div>
+    <button class="btn" onclick="validateAndStart()">
+      Iniciar diagnóstico →
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SURVEY SCREEN
+══════════════════════════════ -->
+<div id="survey" class="screen">
+  <div class="survey-header">
+    <img src="data:image/png;base64,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" alt="Salestrain" style="height:28px">
+    <div class="progress-wrap">
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progress-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progress-label">0 / 32</div>
+    </div>
+  </div>
+
+  <div class="survey-body" id="survey-body"></div>
+
+  <div class="survey-nav">
+    <div class="nav-info" id="nav-info">Responde todas las afirmaciones para continuar</div>
+    <button class="btn" onclick="generateReport()">Ver mi diagnóstico →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     REPORT SCREEN
+══════════════════════════════ -->
+<div id="report" class="screen">
+  <div class="report-header">
+    <div>
+      <div class="report-title"><span>Salestrain</span> Index® — Resultados</div>
+      <div style="font-size:12px;color:var(--gray);margin-top:4px;" id="report-date"></div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="print-btn" onclick="window.print()">🖨 Imprimir</button>
+      <button class="btn btn-outline" onclick="location.reload()">Nueva evaluación</button>
+    </div>
+  </div>
+
+  <div class="report-body" id="report-body"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// DATA: 32 questions — nueva versión generalista
+// ════════════════════════════════════════════════
+const DIMENSIONS = [
+  {
+    id: 'alin_est', universe: 'ESTRATEGIA', name: 'Alineación Estratégica',
+    sub: 'Alineación Estratégica y Oferta de Valor',
+    questions: [
+      "La dirección puede explicar el modelo de negocio de la empresa en menos de dos minutos, mediante un storytelling claro y potente.",
+      "Todos los vendedores transmiten los mismos mensajes hacia el mercado, de manera consistente.",
+      "La empresa es hoy en día la misma que la dirección general visualiza como 'la organización ideal'.",
+    ]
+  },
+  {
+    id: 'alin_tac', universe: 'ESTRATEGIA', name: 'Alineación Táctico-Operativa',
+    sub: 'Traducción de la Estrategia en Acciones',
+    questions: [
+      "Todos los directores saben traducir la estrategia en un modelo de trabajo para su área.",
+      "Las metas tienen un racional operativo que las facilita, soporta y las hace viables.",
+      "La empresa tiene una operación alineada y ligada a los resultados de negocio, a los indicadores comerciales y a las metas de venta que el equipo persigue en su operación diaria.",
+    ]
+  },
+  {
+    id: 'proc_venta', universe: 'METODOLOGÍA', name: 'Proceso de Venta',
+    sub: 'Modelo Comercial y Proceso',
+    questions: [
+      "En la empresa hay un modelo de ventas que nos distingue.",
+      "La metodología y el proceso comercial es tan bueno que no depende del talento individual de los vendedores.",
+      "El proceso comercial está diseñado a partir del proceso de compra de los clientes.",
+      "El proceso comercial tiene establecidas con claridad las etapas que se deben cumplir para completarlo.",
+      "El equipo responsable de llevar a cabo las ventas cuenta con todas las herramientas requeridas para facilitar su labor y con los materiales comerciales actualizados (presentaciones, brochures, casos de éxito, etc.).",
+      "Existe un proceso de venta institucional que es seguido puntualmente por todos los que hoy llevan a cabo las ventas.",
+    ]
+  },
+  {
+    id: 'liderazgo', universe: 'METODOLOGÍA', name: 'Liderazgo Facilitador',
+    sub: 'Experiencia, Desarrollo y Soporte del Líder',
+    questions: [
+      "El líder del equipo comercial es experto en el proceso de venta.",
+      "El líder del equipo comercial tiene un programa de entrenamiento que permite que la curva de aprendizaje de los nuevos miembros sea lo más corta posible.",
+      "El líder del equipo comercial se preocupa permanentemente por la integridad del equipo.",
+      "El líder comercial basa en la confianza su relación con los miembros de su equipo.",
+    ]
+  },
+  {
+    id: 'medicion', universe: 'EJECUCIÓN', name: 'Medición',
+    sub: 'Herramienta de Medición y Procesamiento',
+    questions: [
+      "La empresa cuenta con un CRM que mide el avance de las oportunidades y que está en sincronía con el proceso comercial.",
+      "Las decisiones comerciales están basadas en la información que se obtiene al realizar revisiones periódicas de la labor y de los resultados.",
+      "Quienes ejecutan el proceso comercial perciben las herramientas de medición como un elemento que soporta y facilita su labor.",
+      "Existe un tablero de indicadores de resultados y tareas comerciales que da claridad y visibilidad de lo que se espera de ellos.",
+    ]
+  },
+  {
+    id: 'habilitacion', universe: 'EJECUCIÓN', name: 'Habilitación',
+    sub: 'Programa de Entrenamiento y Desarrollo',
+    questions: [
+      "Existe un programa de entrenamiento comercial que explica las etapas y tareas del proceso de venta, que permite que los vendedores nuevos lo adopten rápidamente.",
+      "Quienes llevan a cabo el proceso comercial saben con claridad qué deben hacer para obtener buenos resultados y alcanzar sus objetivos.",
+      "La dirección está conforme con el tiempo que hoy le toma a un nuevo colaborador alcanzar sus metas de venta.",
+      "La labor comercial se facilita con la documentación de un Playbook u otro material que habilita la venta.",
+      "La fuerza comercial se entrena en todas las actividades requeridas para su productividad y desarrollo (producto, ejecución en ventas, gerenciamiento).",
+      "Se destinan los recursos necesarios para entrenar al equipo comercial y que éste alcance los resultados esperados.",
+      "Existe un programa que desarrolla las habilidades soft que demanda el proceso comercial (empatía, manejo de reuniones, generación de acuerdos y manejo de objeciones).",
+    ]
+  },
+  {
+    id: 'ejecucion', universe: 'EJECUCIÓN', name: 'Ejecución',
+    sub: 'Resultados, Enfoque y Accountability',
+    questions: [
+      "Las cuotas de venta y los objetivos comerciales habitualmente se cumplen.",
+      "Existe un proceso de venta institucional que es seguido puntualmente por todos los que hoy llevan a cabo las ventas.",
+      "Los responsables de llevar a cabo el proceso de venta se enfocan en el resultado y el objetivo comercial que se ha planteado.",
+      "El equipo comercial tiene claro qué tareas impactan en los resultados y los objetivos que persigue.",
+      "Los responsables del proceso de venta tienen visibilidad de las brechas de desempeño en sus tareas, resultados y objetivos.",
+      "Existe una serie de procedimientos que propician un ambiente de rendición de cuentas hacia la tarea, el resultado y el objetivo comercial.",
+    ]
+  }
+];
+
+const UNIVERSE_CONFIG = {
+  ESTRATEGIA:  { weight: 33, color: '#ba9492', label: 'Estrategia' },
+  METODOLOGÍA: { weight: 34, color: '#91a898', label: 'Metodología' },
+  EJECUCIÓN:   { weight: 33, color: '#a9aaa9', label: 'Ejecución' }
+};
+
+const LIKERT_OPTIONS = [
+  { label: 'Totalmente en desacuerdo', score: 0 },
+  { label: 'Parcialmente en desacuerdo', score: 1 },
+  { label: 'Parcialmente de acuerdo', score: 2 },
+  { label: 'Totalmente de acuerdo', score: 4 },
+];
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let answers = {}; // key: "dimIdx_qIdx", value: score
+let respondent = {};
+
+// ════════════════════════════════════════════════
+// VALIDATION
+// ════════════════════════════════════════════════
+function validateAndStart() {
+  const email = document.getElementById('inp-email').value.trim();
+  const tel = document.getElementById('inp-telefono').value.trim();
+  const errDiv = document.getElementById('form-error');
+  const errors = [];
+
+  if (!email.includes('@')) errors.push('El correo electrónico debe contener "@".');
+  const digits = tel.replace(/\D/g,'');
+  if (digits.length < 10) errors.push('El teléfono móvil debe contener al menos 10 dígitos.');
+
+  if (errors.length) {
+    errDiv.innerHTML = '⚠️ ' + errors.join('<br>⚠️ ');
+    errDiv.style.display = 'block';
+    return;
+  }
+  errDiv.style.display = 'none';
+  startSurvey();
+}
+
+// ════════════════════════════════════════════════
+// INTRO → SURVEY
+// ════════════════════════════════════════════════
+function startSurvey() {
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2,'0');
+  const mmm = now.toLocaleDateString('es-MX', { month: 'short' }).replace('.','');
+  const aaaa = now.getFullYear();
+  respondent = {
+    nombre: document.getElementById('inp-nombre').value || 'Participante',
+    empresa: document.getElementById('inp-empresa').value || 'Mi Empresa',
+    posicion: document.getElementById('inp-posicion').value || 'No especificado',
+    industria: document.getElementById('inp-industria').value || 'No especificado',
+    email: document.getElementById('inp-email').value || '—',
+    telefono: document.getElementById('inp-telefono').value || '—',
+    codigo: (document.getElementById('inp-codigo').value || '').toUpperCase() || 'SIN-CODIGO',
+    fecha: `${dd}/${mmm}/${aaaa}`
+  };
+  showScreen('survey');
+  renderSurvey();
+}
+
+function renderSurvey() {
+  const body = document.getElementById('survey-body');
+  body.innerHTML = '';
+  DIMENSIONS.forEach((dim, di) => {
+    const block = document.createElement('div');
+    block.className = 'dimension-block';
+    block.innerHTML = `
+      <div class="dim-header">
+        <div>
+          <div class="dim-badge">${dim.universe}</div>
+        </div>
+        <div>
+          <div class="dim-title">${dim.name}</div>
+          <div class="dim-desc">${dim.sub}</div>
+        </div>
+      </div>
+    `;
+    dim.questions.forEach((q, qi) => {
+      const key = `${di}_${qi}`;
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      card.id = `card-${key}`;
+      let opts = LIKERT_OPTIONS.map((o, oi) => `
+        <label>
+          <input type="radio" name="q_${key}" value="${o.score}" onchange="recordAnswer('${key}', ${o.score}, this)">
+          <div class="likert-btn">${o.label}</div>
+        </label>
+      `).join('');
+      card.innerHTML = `
+        <div class="q-num">Afirmación ${getQNum(di, qi)}</div>
+        <div class="q-text">${q}</div>
+        <div class="likert">${opts}</div>
+      `;
+      block.appendChild(card);
+    });
+    body.appendChild(block);
+  });
+  updateProgress();
+}
+
+function getQNum(di, qi) {
+  let n = 1;
+  for (let i = 0; i < di; i++) n += DIMENSIONS[i].questions.length;
+  return n + qi;
+}
+
+function recordAnswer(key, score, input) {
+  answers[key] = score;
+  const card = document.getElementById(`card-${key}`);
+  if (card) card.classList.add('answered');
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = DIMENSIONS.reduce((s, d) => s + d.questions.length, 0);
+  const done = Object.keys(answers).length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${total}`;
+  document.getElementById('nav-info').textContent = done < total
+    ? `${total - done} afirmaciones restantes`
+    : '✓ Completo — genera tu diagnóstico';
+}
+
+// ════════════════════════════════════════════════
+// REPORT GENERATION
+// ════════════════════════════════════════════════
+function calcScores() {
+  const dimScores = DIMENSIONS.map((dim, di) => {
+    const scores = dim.questions.map((_, qi) => answers[`${di}_${qi}`] ?? 2);
+    const total = scores.reduce((a, b) => a + b, 0);
+    const max = dim.questions.length * 4;
+    const pct = Math.round((total / max) * 100);
+    return { ...dim, scores, pct, total, max };
+  });
+
+  const universes = {};
+  Object.keys(UNIVERSE_CONFIG).forEach(u => {
+    const dims = dimScores.filter(d => d.universe === u);
+    const tot = dims.reduce((s, d) => s + d.total, 0);
+    const mx = dims.reduce((s, d) => s + d.max, 0);
+    universes[u] = { pct: mx ? Math.round((tot / mx) * 100) : 0, dims, color: UNIVERSE_CONFIG[u].color };
+  });
+
+  const allScores = dimScores.flatMap((d, di) => d.questions.map((q, qi) => ({
+    q, score: (answers[`${di}_${qi}`] ?? 2), pct: Math.round(((answers[`${di}_${qi}`] ?? 2) / 4) * 100),
+    dim: d.name, universe: d.universe
+  })));
+
+  const overall = Math.round(
+    Object.entries(universes).reduce((s, [key, u]) => s + u.pct * (UNIVERSE_CONFIG[key]?.weight || 33), 0) / 100
+  );
+
+  return { dimScores, universes, allScores, overall };
+}
+
+function scoreColor(pct) {
+  if (pct >= 70) return 'good';
+  if (pct >= 50) return 'mid';
+  return 'bad';
+}
+
+function scoreHex(pct) {
+  if (pct >= 70) return '#4ea568';
+  if (pct >= 50) return '#F5B800';
+  return '#e06560';
+}
+
+const SUPABASE_URL = 'https://hgejfcvlwdnnpojbcicd.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_kj6PuOuqd8YM7vUJB66uqg_T0MX6v2u';
+
+async function saveToSupabase(data) {
+  const scores = {};
+  data.dimScores.forEach(d => { scores[d.name] = d.pct; });
+  scores['ESTRATEGIA']  = data.universes['ESTRATEGIA']?.pct;
+  scores['METODOLOGÍA'] = data.universes['METODOLOGÍA']?.pct;
+  scores['EJECUCIÓN']   = data.universes['EJECUCIÓN']?.pct;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/respuestas`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        codigo_empresa: respondent.codigo || respondent.empresa,
+        tipo_encuesta: 'algoritmo-exito',
+        nombre:   respondent.nombre,
+        empresa:  respondent.empresa,
+        posicion: respondent.posicion,
+        email:    respondent.email,
+        telefono: respondent.telefono,
+        fecha:    respondent.fecha,
+        scores
+      })
+    });
+  } catch(e) { console.warn('Supabase save error:', e); }
+}
+
+function generateReport() {
+  const data = calcScores();
+  showScreen('report');
+  document.getElementById('report-date').textContent = `Generado el ${respondent.fecha} — ${respondent.nombre} · ${respondent.empresa}`;
+
+  const body = document.getElementById('report-body');
+  body.innerHTML = `
+    ${renderClientBanner()}
+    ${renderScoreHero(data)}
+    <div class="report-grid">
+      ${renderVenn(data)}
+      ${renderRadar(data)}
+      ${renderDetailTable(data)}
+      ${renderPlan(data)}
+    </div>
+  `;
+
+  saveToSupabase(data);
+
+  // animate bars
+  setTimeout(() => {
+    body.querySelectorAll('.bar-inner[data-w]').forEach(el => {
+      el.style.width = el.dataset.w + '%';
+    });
+  }, 100);
+}
+
+function renderClientBanner() {
+  return `
+  <div class="client-info-banner">
+    <div class="client-info-item"><label>Código</label><strong>${respondent.codigo}</strong></div>
+    <div class="client-info-item"><label>Participante</label><strong>${respondent.nombre}</strong></div>
+    <div class="client-info-item"><label>Empresa</label><strong>${respondent.empresa}</strong></div>
+    <div class="client-info-item"><label>Posición</label><strong>${respondent.posicion}</strong></div>
+    <div class="client-info-item"><label>Email</label><strong>${respondent.email}</strong></div>
+    <div class="client-info-item"><label>Teléfono</label><strong>${respondent.telefono}</strong></div>
+    <div class="client-info-item"><label>Fecha</label><strong>${respondent.fecha}</strong></div>
+  </div>`;
+}
+
+function renderScoreHero(data) {
+  const uKeys = ['ESTRATEGIA', 'METODOLOGÍA', 'EJECUCIÓN'];
+  const cards = uKeys.map(u => {
+    const uc = data.universes[u];
+    const cls = scoreColor(uc.pct);
+    const label = u === 'ESTRATEGIA' ? 'estrategia' : u === 'METODOLOGÍA' ? 'tactica' : 'operativa';
+    return `
+    <div class="score-card ${label}">
+      <div class="score-universe">${u}</div>
+      <div class="score-pct ${cls}">${uc.pct}%</div>
+      <div class="score-label">${uc.pct >= 70 ? 'Fortaleza' : uc.pct >= 50 ? 'Área de mejora' : 'Prioridad urgente'}</div>
+      <div class="score-ring">${renderMini(uc.pct, UNIVERSE_CONFIG[u].color)}</div>
+    </div>`;
+  }).join('');
+  return `<div class="score-hero">${cards}</div>`;
+}
+
+function renderMini(pct, color) {
+  const r = 28, cx = 32, cy = 32;
+  const circ = 2 * Math.PI * r;
+  const dash = (pct / 100) * circ;
+  return `<svg width="64" height="64" viewBox="0 0 64 64">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="5"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="5"
+      stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${circ * 0.25}" stroke-linecap="round"/>
+    <text x="${cx}" y="${cy+5}" text-anchor="middle" fill="${color}" font-size="13" font-weight="800" font-family="Barlow Condensed">${pct}%</text>
+  </svg>`;
+}
+
+function renderVenn(data) {
+  const e = data.universes['ESTRATEGIA'].pct;
+  const t = data.universes['METODOLOGÍA'].pct;
+  const o = data.universes['EJECUCIÓN'].pct;
+  const overall = Math.round((e + t + o) / 3);
+  const ce = scoreHex(e), ct = scoreHex(t), co = scoreHex(o);
+
+  return `
+  <div class="venn-wrap">
+    <div class="section-title"><span>Mapa</span> de Universos</div>
+    <svg class="venn-svg" viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg">
+      <!-- Estrategia top -->
+      <circle cx="200" cy="115" r="105" fill="${ce}" fill-opacity="0.13" stroke="${ce}" stroke-width="2.5" stroke-opacity="0.7"/>
+      <!-- Táctica bottom-left -->
+      <circle cx="145" cy="220" r="105" fill="${ct}" fill-opacity="0.13" stroke="${ct}" stroke-width="2.5" stroke-opacity="0.7"/>
+      <!-- Operativa bottom-right -->
+      <circle cx="255" cy="220" r="105" fill="${co}" fill-opacity="0.13" stroke="${co}" stroke-width="2.5" stroke-opacity="0.7"/>
+
+      <!-- Labels -->
+      <text x="200" y="62" text-anchor="middle" fill="${ce}" font-family="Barlow Condensed" font-weight="800" font-size="13" letter-spacing="1">ESTRATEGIA</text>
+      <text x="200" y="78" text-anchor="middle" fill="${ce}" font-family="Barlow Condensed" font-weight="900" font-size="20">${e}%</text>
+
+      <text x="82" y="285" text-anchor="middle" fill="${ct}" font-family="Barlow Condensed" font-weight="800" font-size="13" letter-spacing="1">METODOLOGÍA</text>
+      <text x="82" y="301" text-anchor="middle" fill="${ct}" font-family="Barlow Condensed" font-weight="900" font-size="20">${t}%</text>
+
+      <text x="318" y="285" text-anchor="middle" fill="${co}" font-family="Barlow Condensed" font-weight="800" font-size="13" letter-spacing="1">EJECUCIÓN</text>
+      <text x="318" y="301" text-anchor="middle" fill="${co}" font-family="Barlow Condensed" font-weight="900" font-size="20">${o}%</text>
+
+      <!-- Center -->
+      <text x="200" y="187" text-anchor="middle" fill="white" font-family="Barlow Condensed" font-weight="900" font-size="28">${overall}%</text>
+      <text x="200" y="203" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="Barlow Condensed" font-size="11" letter-spacing="2">ÍNDICE GLOBAL</text>
+    </svg>
+  </div>`;
+}
+
+function renderRadar(data) {
+  const dims = data.dimScores;
+  const n = dims.length;
+  const cx = 160, cy = 160, r = 120;
+  const angles = dims.map((_, i) => (Math.PI * 2 * i / n) - Math.PI / 2);
+
+  function pt(idx, pct) {
+    const a = angles[idx];
+    const rr = (pct / 100) * r;
+    return [cx + rr * Math.cos(a), cy + rr * Math.sin(a)];
+  }
+
+  // Grid circles
+  let grid = [20, 40, 60, 80, 100].map(p => {
+    const pts = dims.map((_, i) => pt(i, p));
+    return `<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+  }).join('');
+
+  // Axes
+  let axes = dims.map((_, i) => {
+    const [x, y] = pt(i, 100);
+    return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`;
+  }).join('');
+
+  // Data polygon
+  const pts = dims.map((d, i) => pt(i, d.pct));
+  const poly = pts.map(p => p.join(',')).join(' ');
+
+  // Labels
+  const labels = dims.map((d, i) => {
+    const [x, y] = pt(i, 115);
+    return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" fill="${scoreHex(d.pct)}" font-family="Barlow Condensed" font-weight="700" font-size="9.5">${d.name.toUpperCase()}</text>`;
+  }).join('');
+
+  const dots = pts.map(([x,y], i) => `<circle cx="${x}" cy="${y}" r="4" fill="${scoreHex(dims[i].pct)}" stroke="var(--bg)" stroke-width="2"/>`).join('');
+
+  return `
+  <div class="radar-wrap">
+    <div class="section-title"><span>Perfil</span> por Dimensión</div>
+    <svg viewBox="-10 0 340 320" xmlns="http://www.w3.org/2000/svg">
+      ${grid}${axes}
+      <polygon points="${poly}" fill="rgba(245,184,0,0.12)" stroke="var(--gold)" stroke-width="2" stroke-linejoin="round"/>
+      ${dots}${labels}
+    </svg>
+  </div>`;
+}
+
+function renderDetailTable(data) {
+  const rows = data.dimScores.map(dim => {
+    const color = scoreHex(dim.pct);
+    const label = dim.pct >= 70 ? 'Fortaleza' : dim.pct >= 50 ? 'Área de mejora' : 'Prioridad urgente';
+    return `<div class="dim-result">
+      <div class="dim-result-header">
+        <div>
+          <div style="font-size:10px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">${dim.universe}</div>
+          <div class="dim-result-name">${dim.name}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:1px;color:${color}">${label}</div>
+          <div class="dim-result-score" style="color:${color}">${dim.pct}%</div>
+        </div>
+      </div>
+      <div class="bar-outer">
+        <div class="bar-inner" data-w="${dim.pct}" style="width:0%;background:${color}"></div>
+      </div>
+    </div>`;
+  }).join('<hr style="border:none;border-top:1px solid var(--border);margin:16px 0">');
+
+  return `
+  <div class="detail-full">
+    <div class="section-title"><span>Análisis</span> por Dimensión</div>
+    ${rows}
+  </div>`;
+}
+
+function renderPlan(data) {
+  const sorted = [...data.dimScores].sort((a, b) => a.pct - b.pct);
+  const PLANS = {
+    'Fundamentos Estratégicos': 'Refuerza la visión compartida del equipo. Implementa sesiones de alineación estratégica y comunica claramente la propuesta de valor.',
+    'Apego a Filosofía': 'Documenta y difunde los valores y lineamientos comerciales. Crea mecanismos de refuerzo cultural.',
+    'Dominio del Mercado': 'Establece un proceso sistemático de inteligencia de mercado. Comparte insights regularmente con el equipo.',
+    'Comunicación del Producto': 'Desarrolla playbooks de ventas con argumentarios probados. Realiza sesiones de certificación de producto.',
+    'Reclutamiento y Selección': 'Define el perfil ideal de vendedor basado en tus mejores ejecutivos. Estructura un proceso de selección robusto.',
+    'Facilitación Comercial': 'Implementa un Sales Playbook con procesos, herramientas y materiales de soporte para el equipo.',
+    'Plan de Entrenamiento': 'Diseña un onboarding estructurado y programa de desarrollo continuo con clínicas de ventas periódicas.',
+    'Apoyo en la Ejecución': 'Establece rutinas de coaching 1:1, acompañamiento a visitas y reuniones comerciales con agenda definida.',
+    'Tecnología para Venta': 'Adopta un CRM y herramientas de productividad. Crea tableros de seguimiento de actividad y resultados.',
+  };
+
+  const items = sorted.map(d => {
+    let pClass = 'bad', pLabel = 'Prioridad Alta';
+    if (d.pct >= 70) { pClass = 'ok'; pLabel = 'Mantener'; }
+    else if (d.pct >= 50) { pClass = 'med'; pLabel = 'Mejorar'; }
+    return `<div class="plan-item">
+      <div class="plan-priority ${pClass}">${pLabel}</div>
+      <div class="plan-text">
+        <div class="plan-name">${d.name} <span style="color:var(--gray);font-weight:400;font-size:13px">${d.pct}%</span></div>
+        <div class="plan-desc">${PLANS[d.name] || 'Enfoca esfuerzos en mejorar esta dimensión con un plan de acción específico.'}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="plan-wrap">
+    <div class="section-title"><span>Plan</span> de Acción Priorizado</div>
+    ${items}
+  </div>`;
+}
+
+// ════════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
