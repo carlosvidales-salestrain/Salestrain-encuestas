@@ -635,7 +635,7 @@ function updateProg(){
   const done = Object.keys(answers).length, pct = Math.round(done/16*100);
   document.getElementById('prog-bar').style.width = pct+'%';
   document.getElementById('prog-lbl').textContent = `${done} / 16`;
-  document.getElementById('nav-info').textContent = done<16 ? `${16-done} preguntas restantes` : '✓ Completo — descubre tu tipología';
+  document.getElementById('nav-info').textContent = done<16 ? `${16-done} preguntas restantes` : '✓ Completo — descubre tu etapa';
 }
 
 // ═══════════════════════ CALC ═══════════════════════
