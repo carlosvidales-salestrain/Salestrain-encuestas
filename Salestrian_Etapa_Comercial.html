@@ -37,8 +37,8 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:var(--bg); color:var(--dark); font-family:'Nunito Sans',sans-serif; font-size:15px; min-height:-webkit-fill-available;min-height:100vh; }
 h1,h2,h3,h4 { font-family:'Nunito',sans-serif; }
-.screen { display:none; min-height:-webkit-fill-available;min-height:100vh; }
-.screen.active { display:block; min-height:100%; }
+.screen { display:none !important; min-height:-webkit-fill-available; min-height:100vh; }
+.screen.active{ display:block !important; min-height:100%; }
 #survey, #report { display:flex; flex-direction:column; }
 
 /* ── BRAND ── */
@@ -231,13 +231,69 @@ h1,h2,h3,h4 { font-family:'Nunito',sans-serif; }
 .rec-red .rec-label { color:#c94040; }
 .rec-red .rec-label::before { background:#c94040; }
 
-@media print { .btn,.s-nav,.r-header .btn,.r-header .btn-outline { display:none; } body { background:white; } }
+@media print {
+  /* ── HIDE UI ELEMENTS ── */
+  .btn, .btn-outline, .btn-sm, .s-nav, .survey-nav,
+  .r-header > div:last-child, #intro, #survey,
+  .brand-links, .report-footer { display:none !important; }
+
+  /* ── PAGE SETUP ── */
+  @page { margin: 15mm 12mm; size: A4 portrait; }
+  html, body { background: #ffffff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+
+  /* ── REPORT LAYOUT ── */
+  #report { display:block !important; }
+  .r-body { max-width:100% !important; padding:0 !important; }
+  .r-header { padding:10px 0 14px !important; border-bottom:2px solid #e0e2d8 !important; margin-bottom:16px; display:flex !important; }
+
+  /* ── PRESERVE COLORS ── */
+  .tipo-hero { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important; }
+  .bg-INICIANDO      { background: linear-gradient(135deg,#c94040,#a02828) !important; }
+  .bg-VENDEDOR_EXPERTO { background: linear-gradient(135deg,#d49030,#b07010) !important; }
+  .bg-ESTRUCTURADA   { background: linear-gradient(135deg,#3a8aaa,#1a6880) !important; }
+  .bg-HABILITADA     { background: linear-gradient(135deg,#3a9e6a,#1a7a48) !important; }
+  .tipo-nombre { color: #ffffff !important; }
+  .tipo-puntaje-num { color: #ffffff !important; font-size:52px !important; }
+  .tipo-puntaje-den { color:rgba(255,255,255,.6) !important; }
+  .tipo-puntaje-label { color:rgba(255,255,255,.6) !important; }
+  .frase-key { color:rgba(255,255,255,.9) !important; }
+  .nivel-pill { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  .tipo-tag { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color:rgba(255,255,255,.85) !important; }
+
+  /* ── GRID → 2 cols in print ── */
+  .info-grid { display:grid !important; grid-template-columns:1fr 1fr !important; gap:12px !important; }
+  .acciones-grid { display:grid !important; grid-template-columns:1fr 1fr 1fr !important; gap:10px !important; }
+
+  /* ── PRESERVE BARS ── */
+  .gauge-outer, .bar-out, .bar-outer { background:#e0e2d8 !important; -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  .gauge-inner, .bar-in, .bar-inner { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+
+  /* ── PRESERVE CARD BORDERS ── */
+  .info-card, .accion-card, .rec-card, .client-banner, .consult-card { border:1px solid #e0e2d8 !important; box-shadow:none !important; break-inside:avoid; }
+
+  /* ── CONSULT CARD ── */
+  .consult-card { background:#2c2c3e !important; -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  .consult-nombre { color:#ffffff !important; }
+  .consult-label { color:#4FBFBF !important; }
+  .consult-desc { color:rgba(255,255,255,.7) !important; }
+  .consult-pill { background:#F5A623 !important; color:#1a1a2e !important; -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+
+  /* ── COLORS ── */
+  .ic-title.teal, .ic-title.teal::before { color:#38a0a0 !important; }
+  .ic-title.orange, .ic-title.orange::before { color:#d4880a !important; }
+  .section-header { color:#6b6b7b !important; border-color:#e0e2d8 !important; }
+
+  /* ── PAGE BREAKS ── */
+  .tipo-hero { break-after:avoid; }
+  .info-grid { break-inside:avoid; }
+  .rec-card { break-inside:avoid; }
+  .acciones-grid { break-inside:avoid; }
+}
 
 /* iOS Safari fixes */
 * { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
 html, body { height:100%; overflow-x:hidden; }
 input[type=text], input[type=email], input[type=tel], select, textarea { font-size: 16px; } /* prevents zoom on focus */
-.screen { min-height: -webkit-fill-available; }
 body { min-height: -webkit-fill-available; }
 
 @media (max-width: 768px) {
@@ -635,7 +691,7 @@ function updateProg(){
   const done = Object.keys(answers).length, pct = Math.round(done/16*100);
   document.getElementById('prog-bar').style.width = pct+'%';
   document.getElementById('prog-lbl').textContent = `${done} / 16`;
-  document.getElementById('nav-info').textContent = done<16 ? `${16-done} preguntas restantes` : '✓ Completo — descubre tu etapa';
+  document.getElementById('nav-info').textContent = done<16 ? `${16-done} preguntas restantes` : '✓ Completo — descubre tu tipología';
 }
 
 // ═══════════════════════ CALC ═══════════════════════
@@ -767,7 +823,17 @@ function genReport(){
   setTimeout(()=>{ document.querySelectorAll('.gauge-inner[data-w]').forEach(el=>el.style.width=el.dataset.w+'%'); }, 120);
 }
 
-function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById(id);
+  el.classList.add('active');
+  // Force scroll to top — multiple methods for cross-browser/iOS compatibility
+  try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch(e) {}
+  try { window.scrollTo(0, 0); } catch(e) {}
+  try { document.documentElement.scrollTop = 0; } catch(e) {}
+  try { document.body.scrollTop = 0; } catch(e) {}
+  try { el.scrollTop = 0; } catch(e) {}
+}
 </script>
 </body>
 </html>
