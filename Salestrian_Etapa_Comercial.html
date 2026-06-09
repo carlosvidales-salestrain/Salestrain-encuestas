@@ -409,7 +409,7 @@ body { min-height: -webkit-fill-available; }
     <div class="form-box">
       <div class="form-box-title">Datos del participante</div>
       <div class="form-grid">
-        <div class="fg full"><label>Código de empresa</label><input type="text" id="i-codigo" placeholder="Opcional" style="text-transform:uppercase"></div>
+        <div class="fg full"><label>Código de empresa</label><input type="text" id="i-codigo" placeholder="Proporcionado por Salestrain" style="text-transform:uppercase"></div>
         <div class="fg"><label>Nombre completo</label><input type="text" id="i-nombre" placeholder="Ej. Ana López"></div>
         <div class="fg"><label>Empresa</label><input type="text" id="i-empresa" placeholder="Ej. Mi Empresa S.A."></div>
         <div class="fg"><label>Posición</label>
@@ -700,8 +700,10 @@ function calcTipologia(){
   const conteos = {a:0,b:0,c:0,d:0};
   vals.forEach(v => conteos[LETRAS[v-1]]++);
   const puntaje = vals.length ? vals.reduce((s,v)=>s+v,0)/vals.length : 1;
-  let tipo = puntaje < 1.5 ? 'INICIANDO' : puntaje < 2.5 ? 'VENDEDOR_EXPERTO' : puntaje < 3.5 ? 'ESTRUCTURADA' : 'HABILITADA';
-  const umbrales = {INICIANDO:1.25,VENDEDOR_EXPERTO:2.25,ESTRUCTURADA:3.25,HABILITADA:999};
+  // Tipología: Iniciando ≤2.00, Vendedor Experto ≤2.75, Estructurada ≤3.50, Habilitada >3.50
+  let tipo = puntaje <= 2.00 ? 'INICIANDO' : puntaje <= 2.75 ? 'VENDEDOR_EXPERTO' : puntaje <= 3.50 ? 'ESTRUCTURADA' : 'HABILITADA';
+  // ALTO = segunda mitad del rango de cada tipología
+  const umbrales = {INICIANDO:1.51, VENDEDOR_EXPERTO:2.38, ESTRUCTURADA:3.13, HABILITADA:0};
   const nivel = (tipo==='HABILITADA' || puntaje >= umbrales[tipo]) ? 'ALTO' : 'BAJO';
   const pcts = {};
   ['a','b','c','d'].forEach((l,i) => pcts[l] = Math.round(conteos[l]/total*100));
